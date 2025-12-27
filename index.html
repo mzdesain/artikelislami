@@ -123,9 +123,46 @@
             margin-bottom: 1rem;
         }
 
+        .share-btn {
+            transition: all 0.25s ease;
+        }
+
+        .share-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background: #047857;
+            color: white;
+            padding: 1rem 1.5rem;
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            animation: slideIn 0.3s ease;
+            z-index: 100;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(100%);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
         @media (max-width: 768px) {
             .arabic-text {
                 font-size: 1.25em;
+            }
+            .toast {
+                bottom: 1rem;
+                right: 1rem;
+                left: 1rem;
             }
         }
     </style>
@@ -253,6 +290,20 @@
        </div>
       </div>
       <div id="detail-content" class="article-content prose prose-lg max-w-none text-gray-700"><!-- Content will be rendered here -->
+      </div><!-- Share Section -->
+      <div class="mt-8 pt-6 border-t border-gray-200">
+       <div class="flex flex-col sm:flex-row items-center justify-between gap-4 bg-gray-50 rounded-lg p-5">
+        <div class="flex items-center gap-3">
+         <div class="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center"><i class="fas fa-share-alt text-green-600"></i>
+         </div>
+         <div>
+          <p class="text-sm font-semibold text-gray-900">Bagikan Artikel Ini</p>
+          <p class="text-xs text-gray-600">Sebarkan kebaikan kepada yang lain</p>
+         </div>
+        </div>
+        <div class="flex items-center gap-2"><button onclick="shareToWhatsApp()" class="share-btn w-10 h-10 bg-green-500 hover:bg-green-600 text-white rounded-full flex items-center justify-center transition" title="Bagikan ke WhatsApp"> <i class="fab fa-whatsapp text-lg"></i> </button> <button onclick="shareToFacebook()" class="share-btn w-10 h-10 bg-blue-600 hover:bg-blue-700 text-white rounded-full flex items-center justify-center transition" title="Bagikan ke Facebook"> <i class="fab fa-facebook-f text-base"></i> </button> <button onclick="shareToTwitter()" class="share-btn w-10 h-10 bg-sky-500 hover:bg-sky-600 text-white rounded-full flex items-center justify-center transition" title="Bagikan ke Twitter"> <i class="fab fa-twitter text-base"></i> </button> <button onclick="copyLink()" class="share-btn w-10 h-10 bg-gray-600 hover:bg-gray-700 text-white rounded-full flex items-center justify-center transition" title="Salin Link"> <i class="fas fa-link text-base"></i> </button>
+        </div>
+       </div>
       </div>
      </div>
     </div><!-- Comments Section -->
@@ -540,6 +591,64 @@
             }
         }
 
+        // Share Functions
+        function shareToWhatsApp() {
+            if (!currentArticle) return;
+            const text = `${currentArticle.title}\n\nBaca artikel lengkapnya di: ${window.location.href}`;
+            const url = `https://wa.me/?text=${encodeURIComponent(text)}`;
+            window.open(url, '_blank', 'noopener,noreferrer');
+        }
+
+        function shareToFacebook() {
+            if (!currentArticle) return;
+            const url = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(window.location.href)}`;
+            window.open(url, '_blank', 'noopener,noreferrer');
+        }
+
+        function shareToTwitter() {
+            if (!currentArticle) return;
+            const text = `${currentArticle.title}`;
+            const url = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(window.location.href)}`;
+            window.open(url, '_blank', 'noopener,noreferrer');
+        }
+
+        function copyLink() {
+            const link = window.location.href;
+            
+            // Create temporary textarea element
+            const textarea = document.createElement('textarea');
+            textarea.value = link;
+            textarea.style.position = 'fixed';
+            textarea.style.opacity = '0';
+            document.body.appendChild(textarea);
+            textarea.select();
+            
+            try {
+                document.execCommand('copy');
+                showToast('Link berhasil disalin!');
+            } catch (err) {
+                showToast('Gagal menyalin link');
+            }
+            
+            document.body.removeChild(textarea);
+        }
+
+        function showToast(message) {
+            const toast = document.createElement('div');
+            toast.className = 'toast';
+            toast.innerHTML = `
+                <div class="flex items-center gap-2">
+                    <i class="fas fa-check-circle text-lg"></i>
+                    <span class="text-sm font-medium">${message}</span>
+                </div>
+            `;
+            document.body.appendChild(toast);
+            
+            setTimeout(() => {
+                toast.remove();
+            }, 3000);
+        }
+
         async function onConfigChange(config) {
             const titleEl = document.getElementById('blog-title');
             const taglineEl = document.getElementById('blog-tagline');
@@ -606,5 +715,5 @@
             }
         })();
     </script>
- <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9b46b365160b5037',t:'MTc2NjgxNjMwOC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9b46c14694f25037',t:'MTc2NjgxNjg3Ni4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
