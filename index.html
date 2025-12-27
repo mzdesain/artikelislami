@@ -58,14 +58,14 @@
         
         .hero-section {
             background: linear-gradient(135deg, #059669 0%, #10b981 100%);
-            border-radius: 20px;
-            padding: 3rem 2rem;
+            border-radius: 16px;
+            padding: 2rem 1.5rem;
             box-shadow: 0 4px 12px rgba(5, 150, 105, 0.15);
         }
         
         .article-card {
             background: white;
-            border-radius: 16px;
+            border-radius: 12px;
             overflow: hidden;
             border: 1px solid #e5e7eb;
             transition: all 0.3s ease;
@@ -84,13 +84,13 @@
         
         .thumbnail-img {
             width: 100%;
-            height: 200px;
+            height: 140px;
             object-fit: cover;
             display: block;
         }
         
         .article-content {
-            padding: 1.25rem;
+            padding: 0.875rem;
             display: flex;
             flex-direction: column;
             flex: 1;
@@ -187,11 +187,11 @@
             }
 
             .hero-section {
-                padding: 2rem 1.5rem;
+                padding: 1.5rem 1rem;
             }
 
             .hero-section h1 {
-                font-size: 1.875rem;
+                font-size: 1.5rem;
             }
         }
     </style>
@@ -235,43 +235,37 @@
    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8"><!-- Home View -->
     <div id="home-view"><!-- Hero Section -->
      <div class="hero-section text-white text-center mb-8">
-      <h1 class="text-3xl md:text-4xl font-bold mb-3">Selamat Datang</h1>
-      <p id="hero-subtitle" class="text-lg md:text-xl text-green-50">Menebar kebaikan melalui tulisan yang bermanfaat</p>
+      <h1 class="text-2xl md:text-3xl font-bold mb-2">Selamat Datang</h1>
+      <p id="hero-subtitle" class="text-base md:text-lg text-green-50">Menebar kebaikan melalui tulisan yang bermanfaat</p>
      </div><!-- Category Filter -->
-     <div class="mb-8">
-      <div class="flex flex-wrap gap-3"><button onclick="filterCategory('all')" class="cat-btn px-5 py-2 rounded-full text-sm font-semibold bg-green-600 text-white whitespace-nowrap shadow-sm transition-all" data-cat="all">Semua</button> <button onclick="filterCategory('Aqidah')" class="cat-btn px-5 py-2 rounded-full text-sm font-semibold bg-white border border-gray-300 text-gray-700 hover:border-green-600 hover:text-green-600 whitespace-nowrap shadow-sm transition-all" data-cat="Aqidah">Aqidah</button> <button onclick="filterCategory('Fiqih')" class="cat-btn px-5 py-2 rounded-full text-sm font-semibold bg-white border border-gray-300 text-gray-700 hover:border-green-600 hover:text-green-600 whitespace-nowrap shadow-sm transition-all" data-cat="Fiqih">Fiqih</button> <button onclick="filterCategory('Akhlak')" class="cat-btn px-5 py-2 rounded-full text-sm font-semibold bg-white border border-gray-300 text-gray-700 hover:border-green-600 hover:text-green-600 whitespace-nowrap shadow-sm transition-all" data-cat="Akhlak">Akhlak</button> <button onclick="filterCategory('Kisah')" class="cat-btn px-5 py-2 rounded-full text-sm font-semibold bg-white border border-gray-300 text-gray-700 hover:border-green-600 hover:text-green-600 whitespace-nowrap shadow-sm transition-all" data-cat="Kisah">Kisah</button>
+     <div class="mb-6">
+      <div class="flex flex-wrap gap-2"><button onclick="filterCategory('all')" class="cat-btn px-4 py-1.5 rounded-full text-sm font-semibold bg-green-600 text-white whitespace-nowrap shadow-sm transition-all" data-cat="all">Semua</button> <button onclick="filterCategory('Aqidah')" class="cat-btn px-4 py-1.5 rounded-full text-sm font-semibold bg-white border border-gray-300 text-gray-700 hover:border-green-600 hover:text-green-600 whitespace-nowrap shadow-sm transition-all" data-cat="Aqidah">Aqidah</button> <button onclick="filterCategory('Fiqih')" class="cat-btn px-4 py-1.5 rounded-full text-sm font-semibold bg-white border border-gray-300 text-gray-700 hover:border-green-600 hover:text-green-600 whitespace-nowrap shadow-sm transition-all" data-cat="Fiqih">Fiqih</button> <button onclick="filterCategory('Akhlak')" class="cat-btn px-4 py-1.5 rounded-full text-sm font-semibold bg-white border border-gray-300 text-gray-700 hover:border-green-600 hover:text-green-600 whitespace-nowrap shadow-sm transition-all" data-cat="Akhlak">Akhlak</button> <button onclick="filterCategory('Kisah')" class="cat-btn px-4 py-1.5 rounded-full text-sm font-semibold bg-white border border-gray-300 text-gray-700 hover:border-green-600 hover:text-green-600 whitespace-nowrap shadow-sm transition-all" data-cat="Kisah">Kisah</button>
       </div>
      </div><!-- Artikel Terbaru Section -->
-     <div class="mb-12">
-      <div class="flex items-center justify-between mb-6">
-       <h2 class="text-2xl font-bold text-gray-800 flex items-center gap-2"><i class="fas fa-clock text-green-600"></i> Artikel Terbaru</h2>
+     <div class="mb-10">
+      <div class="flex items-center justify-between mb-4">
+       <h2 class="text-xl font-bold text-gray-800 flex items-center gap-2"><i class="fas fa-clock text-green-600"></i> Artikel Terbaru</h2>
       </div>
-      <div id="latest-articles-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5"></div>
+      <div id="latest-articles-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
      </div><!-- Artikel Populer Section -->
-     <div class="mb-12">
-      <div class="flex items-center justify-between mb-6">
-       <h2 class="text-2xl font-bold text-gray-800 flex items-center gap-2"><i class="fas fa-fire text-orange-600"></i> Artikel Populer</h2>
+     <div class="mb-10">
+      <div class="flex items-center justify-between mb-4">
+       <h2 class="text-xl font-bold text-gray-800 flex items-center gap-2"><i class="fas fa-fire text-orange-600"></i> Artikel Populer</h2>
       </div>
-      <div id="popular-articles-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5"></div>
-     </div><!-- Artikel Paling Banyak Dikunjungi Section -->
-     <div class="mb-12">
-      <div class="flex items-center justify-between mb-6">
-       <h2 class="text-2xl font-bold text-gray-800 flex items-center gap-2"><i class="fas fa-eye text-blue-600"></i> Paling Banyak Dikunjungi</h2>
-      </div>
-      <div id="most-viewed-articles-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5"></div>
+      <div id="popular-articles-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
      </div>
     </div><!-- All Articles View -->
     <div id="all-articles-view" class="hidden">
-     <h2 class="text-3xl font-bold mb-6 text-gray-800">Semua Artikel</h2><!-- Sort Filter -->
+     <h2 class="text-2xl font-bold mb-6 text-gray-800">Semua Artikel</h2><!-- Sort Filter -->
      <div class="mb-6">
-      <div class="flex flex-wrap gap-3"><button onclick="filterSort('latest')" class="sort-btn px-5 py-2 rounded-full text-sm font-semibold bg-green-600 text-white whitespace-nowrap shadow-sm transition-all" data-sort="latest"> <i class="fas fa-clock mr-1"></i> Terbaru </button> <button onclick="filterSort('popular')" class="sort-btn px-5 py-2 rounded-full text-sm font-semibold bg-white border border-gray-300 text-gray-700 hover:border-green-600 hover:text-green-600 whitespace-nowrap shadow-sm transition-all" data-sort="popular"> <i class="fas fa-fire mr-1"></i> Populer </button> <button onclick="filterSort('most-viewed')" class="sort-btn px-5 py-2 rounded-full text-sm font-semibold bg-white border border-gray-300 text-gray-700 hover:border-green-600 hover:text-green-600 whitespace-nowrap shadow-sm transition-all" data-sort="most-viewed"> <i class="fas fa-eye mr-1"></i> Paling Banyak Dikunjungi </button>
+      <div class="flex flex-wrap gap-2"><button onclick="filterSort('latest')" class="sort-btn px-4 py-1.5 rounded-full text-sm font-semibold bg-green-600 text-white whitespace-nowrap shadow-sm transition-all" data-sort="latest"> <i class="fas fa-clock mr-1"></i> Terbaru </button> <button onclick="filterSort('popular')" class="sort-btn px-4 py-1.5 rounded-full text-sm font-semibold bg-white border border-gray-300 text-gray-700 hover:border-green-600 hover:text-green-600 whitespace-nowrap shadow-sm transition-all" data-sort="popular"> <i class="fas fa-fire mr-1"></i> Populer </button> <button onclick="filterSort('most-viewed')" class="sort-btn px-4 py-1.5 rounded-full text-sm font-semibold bg-white border border-gray-300 text-gray-700 hover:border-green-600 hover:text-green-600 whitespace-nowrap shadow-sm transition-all" data-sort="most-viewed"> <i class="fas fa-eye mr-1"></i> Paling Banyak Dikunjungi </button>
       </div>
      </div><!-- Category Filter -->
-     <div class="mb-8">
-      <div class="flex flex-wrap gap-3"><button onclick="filterCategory('all')" class="cat-btn-all px-5 py-2 rounded-full text-sm font-semibold bg-green-600 text-white whitespace-nowrap shadow-sm transition-all" data-cat="all">Semua</button> <button onclick="filterCategory('Aqidah')" class="cat-btn-all px-5 py-2 rounded-full text-sm font-semibold bg-white border border-gray-300 text-gray-700 hover:border-green-600 hover:text-green-600 whitespace-nowrap shadow-sm transition-all" data-cat="Aqidah">Aqidah</button> <button onclick="filterCategory('Fiqih')" class="cat-btn-all px-5 py-2 rounded-full text-sm font-semibold bg-white border border-gray-300 text-gray-700 hover:border-green-600 hover:text-green-600 whitespace-nowrap shadow-sm transition-all" data-cat="Fiqih">Fiqih</button> <button onclick="filterCategory('Akhlak')" class="cat-btn-all px-5 py-2 rounded-full text-sm font-semibold bg-white border border-gray-300 text-gray-700 hover:border-green-600 hover:text-green-600 whitespace-nowrap shadow-sm transition-all" data-cat="Akhlak">Akhlak</button> <button onclick="filterCategory('Kisah')" class="cat-btn-all px-5 py-2 rounded-full text-sm font-semibold bg-white border border-gray-300 text-gray-700 hover:border-green-600 hover:text-green-600 whitespace-nowrap shadow-sm transition-all" data-cat="Kisah">Kisah</button>
+     <div class="mb-6">
+      <div class="flex flex-wrap gap-2"><button onclick="filterCategory('all')" class="cat-btn-all px-4 py-1.5 rounded-full text-sm font-semibold bg-green-600 text-white whitespace-nowrap shadow-sm transition-all" data-cat="all">Semua</button> <button onclick="filterCategory('Aqidah')" class="cat-btn-all px-4 py-1.5 rounded-full text-sm font-semibold bg-white border border-gray-300 text-gray-700 hover:border-green-600 hover:text-green-600 whitespace-nowrap shadow-sm transition-all" data-cat="Aqidah">Aqidah</button> <button onclick="filterCategory('Fiqih')" class="cat-btn-all px-4 py-1.5 rounded-full text-sm font-semibold bg-white border border-gray-300 text-gray-700 hover:border-green-600 hover:text-green-600 whitespace-nowrap shadow-sm transition-all" data-cat="Fiqih">Fiqih</button> <button onclick="filterCategory('Akhlak')" class="cat-btn-all px-4 py-1.5 rounded-full text-sm font-semibold bg-white border border-gray-300 text-gray-700 hover:border-green-600 hover:text-green-600 whitespace-nowrap shadow-sm transition-all" data-cat="Akhlak">Akhlak</button> <button onclick="filterCategory('Kisah')" class="cat-btn-all px-4 py-1.5 rounded-full text-sm font-semibold bg-white border border-gray-300 text-gray-700 hover:border-green-600 hover:text-green-600 whitespace-nowrap shadow-sm transition-all" data-cat="Kisah">Kisah</button>
       </div>
      </div><!-- Articles Grid -->
-     <div id="articles-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 mb-8"></div>
+     <div id="articles-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-8"></div>
      <div id="empty-msg" class="hidden text-center py-16 bg-white rounded-lg border"><i class="fas fa-inbox text-6xl text-gray-300 mb-4"></i>
       <p class="text-gray-500 text-lg">Belum ada artikel</p>
      </div>
@@ -346,7 +340,7 @@
       <div id="detail-content" class="text-gray-700 mb-8 leading-relaxed"></div><!-- Share Buttons -->
       <div class="bg-gray-50 rounded-xl p-6 mb-8 border">
        <h4 class="font-bold mb-4 text-gray-800 flex items-center gap-2"><i class="fas fa-share-alt text-green-600"></i> Bagikan Artikel Ini</h4>
-       <div class="flex flex-wrap gap-3"><button onclick="shareToFacebook()" class="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-semibold"> <i class="fab fa-facebook-f"></i> Facebook </button> <button onclick="shareToTwitter()" class="flex items-center gap-2 px-4 py-2 bg-black text-white rounded-lg hover:bg-gray-800 transition-colors font-semibold"> <i class="fab fa-twitter"></i> Twitter </button> <button onclick="shareToWhatsApp()" class="flex items-center gap-2 px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors font-semibold"> <i class="fab fa-whatsapp"></i> WhatsApp </button> <button onclick="shareToTelegram()" class="flex items-center gap-2 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors font-semibold"> <i class="fab fa-telegram-plane"></i> Telegram </button> <button onclick="copyArticleLink()" class="flex items-center gap-2 px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors font-semibold"> <i class="fas fa-link"></i> Salin Link </button>
+       <div class="flex flex-wrap gap-3"><button onclick="shareToFacebook()" class="w-12 h-12 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors flex items-center justify-center" title="Facebook"> <i class="fab fa-facebook-f text-xl"></i> </button> <button onclick="shareToTwitter()" class="w-12 h-12 bg-black text-white rounded-lg hover:bg-gray-800 transition-colors flex items-center justify-center" title="Twitter"> <i class="fab fa-twitter text-xl"></i> </button> <button onclick="shareToWhatsApp()" class="w-12 h-12 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors flex items-center justify-center" title="WhatsApp"> <i class="fab fa-whatsapp text-xl"></i> </button> <button onclick="shareToTelegram()" class="w-12 h-12 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors flex items-center justify-center" title="Telegram"> <i class="fab fa-telegram-plane text-xl"></i> </button> <button onclick="copyArticleLink()" class="w-12 h-12 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors flex items-center justify-center" title="Salin Link"> <i class="fas fa-link text-xl"></i> </button>
        </div>
       </div><!-- Comments -->
       <div class="border-t pt-8 pb-8">
@@ -436,13 +430,13 @@
                 <div class="article-card" onclick="viewArticle('${article.id}')">
                     ${article.thumbnail ? 
                         `<img src="${article.thumbnail}" alt="${article.title}" class="thumbnail-img" onerror="this.style.display='none'">` : 
-                        '<div class="w-full h-52 bg-gradient-to-br from-green-400 to-green-600 flex items-center justify-center"><i class="fas fa-mosque text-white text-4xl opacity-30"></i></div>'
+                        '<div class="w-full h-36 bg-gradient-to-br from-green-400 to-green-600 flex items-center justify-center"><i class="fas fa-mosque text-white text-3xl opacity-30"></i></div>'
                     }
                     <div class="article-content">
-                        <span class="inline-block px-3 py-1 bg-green-100 text-green-700 rounded-lg text-xs font-bold mb-3">${article.category}</span>
-                        <h2 class="text-lg font-bold mb-2 text-gray-800 line-clamp-2">${article.title}</h2>
-                        <p class="text-gray-600 mb-4 text-sm line-clamp-2 flex-1">${article.excerpt}</p>
-                        <div class="flex justify-between items-center text-sm text-gray-500 pt-3 border-t mt-auto">
+                        <span class="inline-block px-2.5 py-0.5 bg-green-100 text-green-700 rounded-lg text-xs font-bold mb-2">${article.category}</span>
+                        <h2 class="text-base font-bold mb-2 text-gray-800 line-clamp-2">${article.title}</h2>
+                        <p class="text-gray-600 mb-3 text-sm line-clamp-2 flex-1">${article.excerpt}</p>
+                        <div class="flex justify-between items-center text-xs text-gray-500 pt-2 border-t mt-auto">
                             <span><i class="fas fa-user mr-1"></i>${article.author}</span>
                             <span><i class="fas fa-eye mr-1"></i>${article.views || 0}</span>
                         </div>
@@ -462,7 +456,6 @@
         function renderHomeSections() {
             const latestGrid = document.getElementById('latest-articles-grid');
             const popularGrid = document.getElementById('popular-articles-grid');
-            const mostViewedGrid = document.getElementById('most-viewed-articles-grid');
             
             let filtered = currentCat === 'all' ? articles : articles.filter(a => a.category === currentCat);
 
@@ -473,10 +466,6 @@
             // Artikel Populer (berdasarkan jumlah komentar)
             const popular = [...filtered].sort((a, b) => (b.comments || 0) - (a.comments || 0)).slice(0, 6);
             popularGrid.innerHTML = popular.length > 0 ? popular.map(createArticleCard).join('') : '<div class="col-span-full text-center py-8 text-gray-500">Belum ada artikel</div>';
-
-            // Paling Banyak Dikunjungi
-            const mostViewed = [...filtered].sort((a, b) => (b.views || 0) - (a.views || 0)).slice(0, 6);
-            mostViewedGrid.innerHTML = mostViewed.length > 0 ? mostViewed.map(createArticleCard).join('') : '<div class="col-span-full text-center py-8 text-gray-500">Belum ada artikel</div>';
         }
 
         function renderAllArticles() {
@@ -508,9 +497,9 @@
             currentSort = sort;
             document.querySelectorAll('.sort-btn').forEach(btn => {
                 if (btn.dataset.sort === sort) {
-                    btn.className = 'sort-btn px-5 py-2 rounded-full text-sm font-semibold bg-green-600 text-white whitespace-nowrap shadow-sm transition-all';
+                    btn.className = 'sort-btn px-4 py-1.5 rounded-full text-sm font-semibold bg-green-600 text-white whitespace-nowrap shadow-sm transition-all';
                 } else {
-                    btn.className = 'sort-btn px-5 py-2 rounded-full text-sm font-semibold bg-white border border-gray-300 text-gray-700 hover:border-green-600 hover:text-green-600 whitespace-nowrap shadow-sm transition-all';
+                    btn.className = 'sort-btn px-4 py-1.5 rounded-full text-sm font-semibold bg-white border border-gray-300 text-gray-700 hover:border-green-600 hover:text-green-600 whitespace-nowrap shadow-sm transition-all';
                 }
             });
             renderArticles();
@@ -522,9 +511,9 @@
             const selector = currentPage === 'all-articles' ? '.cat-btn-all' : '.cat-btn';
             document.querySelectorAll(selector).forEach(btn => {
                 if (btn.dataset.cat === cat) {
-                    btn.className = selector.substring(1) + ' px-5 py-2 rounded-full text-sm font-semibold bg-green-600 text-white whitespace-nowrap shadow-sm transition-all';
+                    btn.className = selector.substring(1) + ' px-4 py-1.5 rounded-full text-sm font-semibold bg-green-600 text-white whitespace-nowrap shadow-sm transition-all';
                 } else {
-                    btn.className = selector.substring(1) + ' px-5 py-2 rounded-full text-sm font-semibold bg-white border border-gray-300 text-gray-700 hover:border-green-600 hover:text-green-600 whitespace-nowrap shadow-sm transition-all';
+                    btn.className = selector.substring(1) + ' px-4 py-1.5 rounded-full text-sm font-semibold bg-white border border-gray-300 text-gray-700 hover:border-green-600 hover:text-green-600 whitespace-nowrap shadow-sm transition-all';
                 }
             });
             
@@ -867,5 +856,5 @@
             });
         }
     </script>
- <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9b4737dfe7631195',t:'MTc2NjgyMTczNS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9b47574756e1fd2d',t:'MTc2NjgyMzAyMS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
