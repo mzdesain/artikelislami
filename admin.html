@@ -1,0 +1,606 @@
+<!doctype html>
+<html lang="id" class="h-full">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Blog Islami - Admin Dashboard</title>
+  <script src="/_sdk/element_sdk.js"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"><!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
+  <style>
+        body {
+            box-sizing: border-box;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        .fade-in {
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 1rem;
+            max-width: 800px;
+            width: 100%;
+            max-height: 90%;
+            overflow-y: auto;
+            animation: slideUp 0.3s ease;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .stat-card {
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 24px rgba(0,0,0,0.1);
+        }
+
+        .article-row {
+            transition: all 0.2s ease;
+        }
+
+        .article-row:hover {
+            background: #f9fafb;
+        }
+
+        .btn-loading {
+            pointer-events: none;
+            opacity: 0.6;
+        }
+
+        .spinner {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            border: 2px solid rgba(255,255,255,0.3);
+            border-top-color: white;
+            border-radius: 50%;
+            animation: spin 0.6s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .toast {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 1rem 1.5rem;
+            border-radius: 0.5rem;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            z-index: 2000;
+            animation: slideIn 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(400px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 120px;
+        }
+
+        .delete-confirm {
+            display: none;
+        }
+
+        .delete-confirm.active {
+            display: inline-flex;
+        }
+
+        @media (max-width: 768px) {
+            .modal-content {
+                max-height: 95%;
+            }
+        }
+    </style>
+  <style>@view-transition { navigation: auto; }</style>
+  <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
+ </head>
+ <body class="h-full bg-gray-50">
+  <div id="app" class="w-full h-full overflow-auto">
+   <header class="bg-gradient-to-r from-indigo-600 to-purple-600 text-white shadow-lg sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 md:py-6">
+     <div class="flex items-center justify-between">
+      <div>
+       <h1 id="admin-title" class="text-xl md:text-2xl lg:text-3xl font-bold">Blog Islami - Admin Dashboard</h1>
+       <p id="welcome-message" class="text-xs md:text-sm opacity-90 mt-1">Kelola artikel dan konten blog Anda</p>
+      </div><button onclick="openAddModal()" class="bg-white text-indigo-600 px-4 md:px-6 py-2 md:py-3 rounded-lg font-semibold hover:bg-gray-100 transition flex items-center gap-2 text-sm md:text-base"> <i class="fas fa-plus"></i> <span class="hidden sm:inline">Artikel Baru</span> </button>
+     </div>
+    </div>
+   </header>
+   <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 md:py-8">
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-6 mb-6 md:mb-8">
+     <div class="stat-card bg-white rounded-xl shadow-sm border border-gray-200 p-4 md:p-6">
+      <div class="flex items-center justify-between mb-3">
+       <div class="w-10 h-10 md:w-12 md:h-12 bg-blue-100 rounded-lg flex items-center justify-center"><i class="fas fa-newspaper text-blue-600 text-lg md:text-xl"></i>
+       </div>
+      </div>
+      <p class="text-xs md:text-sm text-gray-600 mb-1">Total Artikel</p>
+      <p id="stat-total" class="text-xl md:text-2xl font-bold text-gray-800">0</p>
+     </div>
+     <div class="stat-card bg-white rounded-xl shadow-sm border border-gray-200 p-4 md:p-6">
+      <div class="flex items-center justify-between mb-3">
+       <div class="w-10 h-10 md:w-12 md:h-12 bg-green-100 rounded-lg flex items-center justify-center"><i class="fas fa-check-circle text-green-600 text-lg md:text-xl"></i>
+       </div>
+      </div>
+      <p class="text-xs md:text-sm text-gray-600 mb-1">Published</p>
+      <p id="stat-published" class="text-xl md:text-2xl font-bold text-gray-800">0</p>
+     </div>
+     <div class="stat-card bg-white rounded-xl shadow-sm border border-gray-200 p-4 md:p-6">
+      <div class="flex items-center justify-between mb-3">
+       <div class="w-10 h-10 md:w-12 md:h-12 bg-orange-100 rounded-lg flex items-center justify-center"><i class="fas fa-clock text-orange-600 text-lg md:text-xl"></i>
+       </div>
+      </div>
+      <p class="text-xs md:text-sm text-gray-600 mb-1">Draft</p>
+      <p id="stat-draft" class="text-xl md:text-2xl font-bold text-gray-800">0</p>
+     </div>
+     <div class="stat-card bg-white rounded-xl shadow-sm border border-gray-200 p-4 md:p-6">
+      <div class="flex items-center justify-between mb-3">
+       <div class="w-10 h-10 md:w-12 md:h-12 bg-purple-100 rounded-lg flex items-center justify-center"><i class="fas fa-eye text-purple-600 text-lg md:text-xl"></i>
+       </div>
+      </div>
+      <p class="text-xs md:text-sm text-gray-600 mb-1">Total Views</p>
+      <p id="stat-views" class="text-xl md:text-2xl font-bold text-gray-800">0</p>
+     </div>
+    </div>
+    <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+     <div class="p-4 md:p-6 border-b border-gray-200">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+       <h2 class="text-lg md:text-xl font-bold text-gray-800">Daftar Artikel</h2>
+       <div class="flex items-center gap-2 md:gap-3"><select id="filter-category" onchange="renderArticles()" class="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"> <option value="all">Semua Kategori</option> <option value="Aqidah">Aqidah</option> <option value="Fiqih">Fiqih</option> <option value="Akhlak">Akhlak</option> <option value="Kisah">Kisah Inspiratif</option> </select> <select id="filter-status" onchange="renderArticles()" class="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"> <option value="all">Semua Status</option> <option value="published">Published</option> <option value="draft">Draft</option> </select>
+       </div>
+      </div>
+     </div>
+     <div class="overflow-x-auto">
+      <table class="w-full">
+       <thead class="bg-gray-50 border-b border-gray-200">
+        <tr>
+         <th class="px-4 md:px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Judul</th>
+         <th class="px-4 md:px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider hidden md:table-cell">Kategori</th>
+         <th class="px-4 md:px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider hidden lg:table-cell">Penulis</th>
+         <th class="px-4 md:px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider hidden sm:table-cell">Status</th>
+         <th class="px-4 md:px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider hidden lg:table-cell">Views</th>
+         <th class="px-4 md:px-6 py-3 text-right text-xs font-semibold text-gray-600 uppercase tracking-wider">Aksi</th>
+        </tr>
+       </thead>
+       <tbody id="articles-table" class="bg-white divide-y divide-gray-200">
+       </tbody>
+      </table>
+     </div>
+    </div>
+   </main>
+   <div id="article-modal" class="modal">
+    <div class="modal-content">
+     <div class="p-4 md:p-6 border-b border-gray-200">
+      <div class="flex items-center justify-between">
+       <h3 id="modal-title" class="text-lg md:text-xl font-bold text-gray-800">Tambah Artikel Baru</h3><button onclick="closeModal()" class="text-gray-400 hover:text-gray-600 transition"> <i class="fas fa-times text-xl"></i> </button>
+      </div>
+     </div>
+     <form id="article-form" onsubmit="handleSubmit(event)" class="p-4 md:p-6 space-y-4 md:space-y-6"><input type="hidden" id="article-id">
+      <div><label for="article-title" class="block text-sm font-semibold text-gray-700 mb-2">Judul Artikel *</label> <input type="text" id="article-title" required class="w-full px-4 py-2 md:py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 text-sm md:text-base" placeholder="Masukkan judul artikel">
+      </div>
+      <div><label for="article-excerpt" class="block text-sm font-semibold text-gray-700 mb-2">Ringkasan *</label> <textarea id="article-excerpt" required class="w-full px-4 py-2 md:py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 text-sm md:text-base" placeholder="Ringkasan singkat artikel (1-2 kalimat)" rows="2"></textarea>
+      </div>
+      <div><label for="article-content" class="block text-sm font-semibold text-gray-700 mb-2">Konten Artikel *</label> <textarea id="article-content" required class="w-full px-4 py-2 md:py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 text-sm md:text-base" placeholder="Tulis konten artikel lengkap di sini..." rows="8"></textarea>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+       <div><label for="article-category" class="block text-sm font-semibold text-gray-700 mb-2">Kategori *</label> <select id="article-category" required class="w-full px-4 py-2 md:py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 text-sm md:text-base"> <option value="">Pilih Kategori</option> <option value="Aqidah">Aqidah</option> <option value="Fiqih">Fiqih</option> <option value="Akhlak">Akhlak</option> <option value="Kisah">Kisah Inspiratif</option> </select>
+       </div>
+       <div><label for="article-author" class="block text-sm font-semibold text-gray-700 mb-2">Penulis *</label> <input type="text" id="article-author" required class="w-full px-4 py-2 md:py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 text-sm md:text-base" placeholder="Nama penulis">
+       </div>
+      </div>
+      <div><label for="article-status" class="block text-sm font-semibold text-gray-700 mb-2">Status *</label> <select id="article-status" required class="w-full px-4 py-2 md:py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 text-sm md:text-base"> <option value="draft">Draft</option> <option value="published">Published</option> </select>
+      </div>
+      <div class="flex flex-col-reverse sm:flex-row gap-3 pt-4"><button type="button" onclick="closeModal()" class="w-full sm:w-auto px-6 py-2 md:py-3 border border-gray-300 rounded-lg text-gray-700 font-semibold hover:bg-gray-50 transition text-sm md:text-base"> Batal </button> <button type="submit" id="submit-btn" class="w-full sm:w-auto px-6 py-2 md:py-3 bg-indigo-600 text-white rounded-lg font-semibold hover:bg-indigo-700 transition text-sm md:text-base"> Simpan Artikel </button>
+      </div>
+     </form>
+    </div>
+   </div>
+  </div>
+  <script>
+        // Firebase Configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyBwmiVnWL1nZ09InaKPyGb33EHVufcub2U",
+            authDomain: "fir-6a3d1.firebaseapp.com",
+            databaseURL: "https://fir-6a3d1-default-rtdb.asia-southeast1.firebasedatabase.app",
+            projectId: "fir-6a3d1",
+            storageBucket: "fir-6a3d1.firebasestorage.app",
+            messagingSenderId: "123456789",
+            appId: "1:123456789:web:f394703a309a0e8202ce75",
+            measurementId: "G-Y1PVBSMWFP"
+        };
+
+        // Initialize Firebase
+        if (!firebase.apps.length) {
+            firebase.initializeApp(firebaseConfig);
+        }
+        const database = firebase.database();
+        const articlesRef = database.ref('articles');
+
+        let articles = [];
+        let editingArticle = null;
+
+        const defaultConfig = {
+            admin_title: "Blog Islami - Admin Dashboard",
+            welcome_message: "Kelola artikel dan konten blog Anda",
+            primary_color: "#4f46e5",
+            bg_color: "#f9fafb",
+            text_color: "#1f2937",
+            font_family: "Inter",
+            font_size: 16
+        };
+
+        // Listen to Firebase real-time updates
+        articlesRef.on('value', (snapshot) => {
+            const data = snapshot.val();
+            articles = data ? Object.keys(data).map(key => ({
+                id: key,
+                ...data[key]
+            })) : [];
+            
+            renderArticles();
+            updateStats();
+        });
+
+        function updateStats() {
+            const total = articles.length;
+            const published = articles.filter(a => a.status === 'published').length;
+            const draft = articles.filter(a => a.status === 'draft').length;
+            const totalViews = articles.reduce((sum, a) => sum + (a.views || 0), 0);
+
+            document.getElementById('stat-total').textContent = total;
+            document.getElementById('stat-published').textContent = published;
+            document.getElementById('stat-draft').textContent = draft;
+            document.getElementById('stat-views').textContent = totalViews;
+        }
+
+        function renderArticles() {
+            const tbody = document.getElementById('articles-table');
+            const categoryFilter = document.getElementById('filter-category').value;
+            const statusFilter = document.getElementById('filter-status').value;
+
+            let filtered = articles;
+
+            if (categoryFilter !== 'all') {
+                filtered = filtered.filter(a => a.category === categoryFilter);
+            }
+
+            if (statusFilter !== 'all') {
+                filtered = filtered.filter(a => a.status === statusFilter);
+            }
+
+            if (filtered.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="6" class="px-6 py-12 text-center">
+                            <i class="fas fa-inbox text-4xl text-gray-300 mb-3"></i>
+                            <p class="text-gray-500">Belum ada artikel</p>
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+
+            const sorted = [...filtered].sort((a, b) => new Date(b.timestamp || 0) - new Date(a.timestamp || 0));
+
+            tbody.innerHTML = sorted.map(article => `
+                <tr class="article-row">
+                    <td class="px-4 md:px-6 py-4">
+                        <div class="flex items-start gap-3">
+                            <div class="flex-1 min-w-0">
+                                <p class="font-semibold text-gray-800 text-sm md:text-base truncate">${article.title}</p>
+                                <p class="text-xs text-gray-500 mt-1">${article.date}</p>
+                                <div class="md:hidden mt-2 flex flex-wrap gap-2">
+                                    <span class="inline-block px-2 py-1 text-xs rounded-full ${getCategoryColor(article.category)}">${article.category}</span>
+                                    <span class="inline-block px-2 py-1 text-xs rounded-full ${getStatusColor(article.status)}">${article.status === 'published' ? 'Published' : 'Draft'}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </td>
+                    <td class="px-4 md:px-6 py-4 hidden md:table-cell">
+                        <span class="inline-block px-2 md:px-3 py-1 text-xs rounded-full ${getCategoryColor(article.category)}">${article.category}</span>
+                    </td>
+                    <td class="px-4 md:px-6 py-4 text-sm text-gray-600 hidden lg:table-cell">${article.author}</td>
+                    <td class="px-4 md:px-6 py-4 hidden sm:table-cell">
+                        <span class="inline-block px-2 md:px-3 py-1 text-xs rounded-full ${getStatusColor(article.status)}">${article.status === 'published' ? 'Published' : 'Draft'}</span>
+                    </td>
+                    <td class="px-4 md:px-6 py-4 text-sm text-gray-600 hidden lg:table-cell">${article.views || 0}</td>
+                    <td class="px-4 md:px-6 py-4">
+                        <div class="flex items-center justify-end gap-2">
+                            <button onclick="editArticle('${article.id}')" class="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition" title="Edit">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button onclick="showDeleteConfirm('${article.id}')" class="p-2 text-red-600 hover:bg-red-50 rounded-lg transition delete-btn-${article.id}" title="Hapus">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                            <div class="delete-confirm delete-confirm-${article.id} items-center gap-2">
+                                <span class="text-xs text-gray-600">Yakin?</span>
+                                <button onclick="deleteArticle('${article.id}')" class="px-2 py-1 bg-red-600 text-white text-xs rounded hover:bg-red-700">
+                                    Ya
+                                </button>
+                                <button onclick="hideDeleteConfirm('${article.id}')" class="px-2 py-1 bg-gray-300 text-gray-700 text-xs rounded hover:bg-gray-400">
+                                    Tidak
+                                </button>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function getCategoryColor(category) {
+            const colors = {
+                'Aqidah': 'bg-blue-100 text-blue-700',
+                'Fiqih': 'bg-green-100 text-green-700',
+                'Akhlak': 'bg-purple-100 text-purple-700',
+                'Kisah': 'bg-orange-100 text-orange-700'
+            };
+            return colors[category] || 'bg-gray-100 text-gray-700';
+        }
+
+        function getStatusColor(status) {
+            return status === 'published' ? 'bg-green-100 text-green-700' : 'bg-orange-100 text-orange-700';
+        }
+
+        function openAddModal() {
+            editingArticle = null;
+            document.getElementById('modal-title').textContent = 'Tambah Artikel Baru';
+            document.getElementById('article-form').reset();
+            document.getElementById('article-id').value = '';
+            document.getElementById('article-modal').classList.add('active');
+        }
+
+        function editArticle(id) {
+            const article = articles.find(a => a.id === id);
+            if (!article) return;
+
+            editingArticle = article;
+
+            document.getElementById('modal-title').textContent = 'Edit Artikel';
+            document.getElementById('article-id').value = article.id;
+            document.getElementById('article-title').value = article.title || '';
+            document.getElementById('article-excerpt').value = article.excerpt || '';
+            document.getElementById('article-content').value = article.content || '';
+            document.getElementById('article-category').value = article.category || '';
+            document.getElementById('article-author').value = article.author || '';
+            document.getElementById('article-status').value = article.status || 'draft';
+            
+            document.getElementById('article-modal').classList.add('active');
+        }
+
+        function closeModal() {
+            document.getElementById('article-modal').classList.remove('active');
+            editingArticle = null;
+        }
+
+        function showDeleteConfirm(id) {
+            document.querySelector(`.delete-btn-${id}`).style.display = 'none';
+            document.querySelector(`.delete-confirm-${id}`).classList.add('active');
+        }
+
+        function hideDeleteConfirm(id) {
+            document.querySelector(`.delete-btn-${id}`).style.display = 'block';
+            document.querySelector(`.delete-confirm-${id}`).classList.remove('active');
+        }
+
+        async function deleteArticle(id) {
+            try {
+                await articlesRef.child(id).remove();
+                showToast('Artikel berhasil dihapus', 'success');
+            } catch (error) {
+                console.error('Error deleting article:', error);
+                showToast('Gagal menghapus artikel', 'error');
+            }
+        }
+
+        async function handleSubmit(e) {
+            e.preventDefault();
+
+            const submitBtn = document.getElementById('submit-btn');
+            submitBtn.classList.add('btn-loading');
+            submitBtn.innerHTML = '<span class="spinner"></span> Menyimpan...';
+
+            const formData = {
+                title: document.getElementById('article-title').value,
+                excerpt: document.getElementById('article-excerpt').value,
+                content: document.getElementById('article-content').value,
+                category: document.getElementById('article-category').value,
+                author: document.getElementById('article-author').value,
+                status: document.getElementById('article-status').value,
+                date: new Date().toLocaleDateString('id-ID', { 
+                    year: 'numeric', 
+                    month: 'long', 
+                    day: 'numeric' 
+                }),
+                timestamp: Date.now(),
+                views: editingArticle ? (editingArticle.views || 0) : 0,
+                comments: editingArticle ? (editingArticle.comments || 0) : 0
+            };
+
+            try {
+                if (editingArticle) {
+                    await articlesRef.child(editingArticle.id).update(formData);
+                    showToast('Artikel berhasil diupdate', 'success');
+                } else {
+                    await articlesRef.push(formData);
+                    showToast('Artikel berhasil dibuat', 'success');
+                }
+                closeModal();
+            } catch (error) {
+                console.error('Error saving article:', error);
+                showToast('Gagal menyimpan artikel', 'error');
+            }
+
+            submitBtn.classList.remove('btn-loading');
+            submitBtn.innerHTML = 'Simpan Artikel';
+        }
+
+        function showToast(message, type) {
+            const toast = document.createElement('div');
+            toast.className = 'toast';
+            
+            if (type === 'success') {
+                toast.style.backgroundColor = '#10b981';
+                toast.innerHTML = `<i class="fas fa-check-circle text-xl"></i><span class="font-medium">${message}</span>`;
+            } else {
+                toast.style.backgroundColor = '#ef4444';
+                toast.innerHTML = `<i class="fas fa-exclamation-circle text-xl"></i><span class="font-medium">${message}</span>`;
+            }
+            
+            toast.style.color = 'white';
+            document.body.appendChild(toast);
+            
+            setTimeout(() => toast.remove(), 3000);
+        }
+
+        document.getElementById('article-modal').addEventListener('click', (e) => {
+            if (e.target.id === 'article-modal') {
+                closeModal();
+            }
+        });
+
+        async function onConfigChange(config) {
+            const titleEl = document.getElementById('admin-title');
+            const messageEl = document.getElementById('welcome-message');
+            
+            if (titleEl) titleEl.textContent = config.admin_title || defaultConfig.admin_title;
+            if (messageEl) messageEl.textContent = config.welcome_message || defaultConfig.welcome_message;
+
+            const bgColor = config.bg_color || defaultConfig.bg_color;
+            const textColor = config.text_color || defaultConfig.text_color;
+
+            document.body.style.backgroundColor = bgColor;
+            document.body.style.color = textColor;
+
+            const customFont = config.font_family || defaultConfig.font_family;
+            const baseFontStack = 'system-ui, -apple-system, sans-serif';
+            document.body.style.fontFamily = `${customFont}, ${baseFontStack}`;
+
+            const baseSize = config.font_size || defaultConfig.font_size;
+            document.body.style.fontSize = `${baseSize}px`;
+        }
+
+        function mapToCapabilities(config) {
+            return {
+                recolorables: [
+                    {
+                        get: () => config.primary_color || defaultConfig.primary_color,
+                        set: (value) => {
+                            config.primary_color = value;
+                            if (window.elementSdk) window.elementSdk.setConfig({ primary_color: value });
+                        }
+                    },
+                    {
+                        get: () => config.bg_color || defaultConfig.bg_color,
+                        set: (value) => {
+                            config.bg_color = value;
+                            if (window.elementSdk) window.elementSdk.setConfig({ bg_color: value });
+                        }
+                    },
+                    {
+                        get: () => config.text_color || defaultConfig.text_color,
+                        set: (value) => {
+                            config.text_color = value;
+                            if (window.elementSdk) window.elementSdk.setConfig({ text_color: value });
+                        }
+                    }
+                ],
+                borderables: [],
+                fontEditable: {
+                    get: () => config.font_family || defaultConfig.font_family,
+                    set: (value) => {
+                        config.font_family = value;
+                        if (window.elementSdk) window.elementSdk.setConfig({ font_family: value });
+                    }
+                },
+                fontSizeable: {
+                    get: () => config.font_size || defaultConfig.font_size,
+                    set: (value) => {
+                        config.font_size = value;
+                        if (window.elementSdk) window.elementSdk.setConfig({ font_size: value });
+                    }
+                }
+            };
+        }
+
+        function mapToEditPanelValues(config) {
+            return new Map([
+                ["admin_title", config.admin_title || defaultConfig.admin_title],
+                ["welcome_message", config.welcome_message || defaultConfig.welcome_message]
+            ]);
+        }
+
+        (function init() {
+            if (window.elementSdk) {
+                window.elementSdk.init({
+                    defaultConfig,
+                    onConfigChange,
+                    mapToCapabilities,
+                    mapToEditPanelValues
+                });
+            }
+        })();
+    </script>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9b4682bcc36a5fbd',t:'MTc2NjgxNDMxNS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
